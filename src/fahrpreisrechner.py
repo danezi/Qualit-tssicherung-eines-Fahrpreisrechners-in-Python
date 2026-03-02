@@ -38,21 +38,31 @@ def _age_discount_factor(age: int) -> float:
     return 0.75
 
 
+def _bahncard_discount_factor(bahncard: int) -> float:
+    """
+    BahnCard-Rabatt (A5) als Multiplikator-Faktor (1 - Rabatt).
+
+    - 0  -> Faktor 1.00
+    - 25 -> Faktor 0.75
+    - 50 -> Faktor 0.50
+    """
+    if bahncard == 0:
+        return 1.00
+    if bahncard == 25:
+        return 0.75
+    return 0.50
+
+
 def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
     """
     Fahrpreisrechner (DB-inspiriert).
 
-    Commit 7:
+    Commit 8:
     - Eingabevalidierung (A2)
     - Distanz-Tarif (A3)
     - Altersrabatt (A4)
-
-    BahnCard-Rabatt (A5) folgt in Commit 8.
-
-    Aktuelles Verhalten:
-    - Ungültige Eingaben -> ValueError
-    - BahnCard != 0 -> NotImplementedError (noch nicht umgesetzt)
-    - Endpreis = Basispreis * Altersfaktor (rund auf 2 Dezimalstellen)
+    - BahnCard-Rabatt (A5)
+    - Endpreisformel (A6) mit Rundung auf 2 Dezimalstellen
     """
     # A2 Eingabevalidierung
     if distance_km < 1:
@@ -64,16 +74,14 @@ def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
     if bahncard not in (0, 25, 50):
         raise ValueError("bahncard must be one of {0, 25, 50}")
 
-    # Commit 7: BahnCard-Rabatt noch nicht implementiert
-    if bahncard != 0:
-        raise NotImplementedError("bahncard discount is not implemented yet")
-
     base = _base_price(float(distance_km))
-    factor = _age_discount_factor(age)
+    age_factor = _age_discount_factor(age)
 
-    # 0..5 Jahre: gratis
-    if factor == 0.00:
+    # 0..5 Jahre: gratis (unabhängig von BahnCard)
+    if age_factor == 0.00:
         return 0.00
 
-    price = base * factor
+    bc_factor = _bahncard_discount_factor(bahncard)
+
+    price = base * age_factor * bc_factor
     return round(price, 2)
