@@ -104,4 +104,3 @@ def test_gw_a10_age_121_invalid():
     # Grenze: 121 ist ungültig
     with pytest.raises(ValueError):
         compute_fare(DIST_FOR_AGE, 121, BC_FOR_AGE)
-        
