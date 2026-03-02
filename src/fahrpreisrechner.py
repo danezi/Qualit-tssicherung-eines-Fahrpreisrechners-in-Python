@@ -20,21 +20,39 @@ def _base_price(distance_km: float) -> float:
     return 12.00 + (0.09 * distance_km)
 
 
+def _age_discount_factor(age: int) -> float:
+    """
+    Altersrabatt (A4) als Multiplikator-Faktor (1 - Rabatt).
+
+    - 0..5   : gratis -> Faktor 0.00
+    - 6..14  : 50% Rabatt -> Faktor 0.50
+    - 15..64 : 0% Rabatt  -> Faktor 1.00
+    - 65..120: 25% Rabatt -> Faktor 0.75
+    """
+    if 0 <= age <= 5:
+        return 0.00
+    if 6 <= age <= 14:
+        return 0.50
+    if 15 <= age <= 64:
+        return 1.00
+    return 0.75
+
+
 def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
     """
     Fahrpreisrechner (DB-inspiriert).
 
-    Commit 6:
+    Commit 7:
     - Eingabevalidierung (A2)
     - Distanz-Tarif (A3)
+    - Altersrabatt (A4)
 
-    Altersrabatt (A4) und BahnCard-Rabatt (A5) folgen in späteren Commits.
+    BahnCard-Rabatt (A5) folgt in Commit 8.
 
     Aktuelles Verhalten:
     - Ungültige Eingaben -> ValueError
-    - Für age=30 und bahncard=0 wird der Basispreis nach Distanz berechnet
-    - Für andere gültige age/bahncard wird NotImplementedError geworfen
-      (Rabatte noch nicht umgesetzt)
+    - BahnCard != 0 -> NotImplementedError (noch nicht umgesetzt)
+    - Endpreis = Basispreis * Altersfaktor (rund auf 2 Dezimalstellen)
     """
     # A2 Eingabevalidierung
     if distance_km < 1:
@@ -46,12 +64,16 @@ def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
     if bahncard not in (0, 25, 50):
         raise ValueError("bahncard must be one of {0, 25, 50}")
 
-    # Commit 6: Nur Basispreis (Distanz) implementiert.
-    # Distanz-Blackbox-Tests nutzen age=30 und bc=0 als Neutralwerte.
-    if age != 30 or bahncard != 0:
-        raise NotImplementedError(
-            "discount rules are not implemented yet"
-        )
+    # Commit 7: BahnCard-Rabatt noch nicht implementiert
+    if bahncard != 0:
+        raise NotImplementedError("bahncard discount is not implemented yet")
 
-    price = _base_price(float(distance_km))
+    base = _base_price(float(distance_km))
+    factor = _age_discount_factor(age)
+
+    # 0..5 Jahre: gratis
+    if factor == 0.00:
+        return 0.00
+
+    price = base * factor
     return round(price, 2)
