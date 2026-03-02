@@ -85,3 +85,4 @@ def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
 
     price = base * age_factor * bc_factor
     return round(price, 2)
+
