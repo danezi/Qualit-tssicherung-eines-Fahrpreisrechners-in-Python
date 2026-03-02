@@ -1,5 +1,3 @@
-
-<<<<<<< feature/step4-skeleton
 from typing import Union
 
 Number = Union[int, float]
