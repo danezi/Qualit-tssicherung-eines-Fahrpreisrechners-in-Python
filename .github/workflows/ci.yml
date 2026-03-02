@@ -26,8 +26,8 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          flake8 src tests
+          PYTHONPATH=. flake8 src tests
 
       - name: Run unit tests with pytest
         run: |
-          pytest -q
+          PYTHONPATH=. pytest -q
