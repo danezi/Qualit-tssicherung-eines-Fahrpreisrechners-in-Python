@@ -1,5 +1,5 @@
-from __future__ import annotations
 
+<<<<<<< feature/step4-skeleton
 from typing import Union
 
 Number = Union[int, float]
@@ -85,3 +85,5 @@ def compute_fare(distance_km: Number, age: int, bahncard: int) -> float:
 
     price = base * age_factor * bc_factor
     return round(price, 2)
+=======
+>>>>>>> master
