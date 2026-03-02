@@ -12,7 +12,6 @@ NEUTRAL_AGE = 30          # Erwachsener: 0% Altersrabatt
 NEUTRAL_BC = 0            # Keine BahnCard: 0% BahnCard-Rabatt
 
 
-
 # EK Distanz (4 Klassen)
 def test_ek_d0_distance_invalid_under_1km():
     # EK-D0: Ungültig (km < 1)
@@ -36,7 +35,6 @@ def test_ek_d3_langstrecke_typical():
     # EK-D3: Langstrecke (>200), repräsentativer Wert: 300 km
     # Erwartung: 12.00 + 300*0.09 = 39.00
     assert compute_fare(300.0, NEUTRAL_AGE, NEUTRAL_BC) == 39.00
-
 
 
 # EK Alter (5 Klassen)
@@ -66,7 +64,6 @@ def test_ek_a4_senior_25_percent():
     # EK-A4: Senior (65..120) => 25% Rabatt
     # 22.00 * 0.75 = 16.50
     assert compute_fare(NEUTRAL_DISTANCE, 70, NEUTRAL_BC) == 16.50
-
 
 
 # EK BahnCard (4 Klassen)

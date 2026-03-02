@@ -15,7 +15,6 @@ DIST_FOR_AGE = 100.0  # Basis: 22.00
 BC_FOR_AGE = 0
 
 
-
 # GW Distanz (6 Fälle)
 def test_gw_d1_distance_0_invalid():
     # Grenze: 0 ist ungültig (km < 1)
@@ -51,7 +50,6 @@ def test_gw_d6_distance_201_first_lang():
     # Grenze: 201 ist erster Langstreckenwert
     # 12.00 + 201*0.09 = 30.09
     assert compute_fare(201.0, AGE_FOR_DISTANCE, BC_FOR_DISTANCE) == 30.09
-
 
 
 # GW Alter (10 Fälle)
@@ -106,3 +104,4 @@ def test_gw_a10_age_121_invalid():
     # Grenze: 121 ist ungültig
     with pytest.raises(ValueError):
         compute_fare(DIST_FOR_AGE, 121, BC_FOR_AGE)
+        
